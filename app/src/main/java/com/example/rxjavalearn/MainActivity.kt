@@ -30,15 +30,24 @@ class MainActivity : AppCompatActivity() {
         //Observable
         //Flowable
 //______________________________________________
-        val dispose = dataSource()
-            .subscribeOn(Schedulers.computation())
+//        val dispose = dataSource()
+//            .subscribeOn(Schedulers.computation())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({
+//                Log.e(TAG, "next int $it")
+//            }, {
+//                Toast.makeText(applicationContext, "it ${it.localizedMessage}", Toast.LENGTH_LONG)
+//                    .show()
+//
+//            }, {
+//
+//            })
+        val disposeTwo = dataSourceSingle()
+            .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.e(TAG,"next int $it")
-            }, {
-                Toast.makeText(applicationContext, "it ${it.localizedMessage}", Toast.LENGTH_LONG).show()
-
-            }, {
+Log.d("SINGLE","$it")
+            },{
 
             })
     }
@@ -68,6 +77,12 @@ fun dataSource(): Flowable<Int> {
             subscriber.onNext(i)
         }
         subscriber.onComplete()
-    },BackpressureStrategy.LATEST)
+    }, BackpressureStrategy.LATEST)
 }
 
+fun dataSourceSingle(): Single<List<Int>> {
+    return Single.create { subscriber ->
+        val list = listOf<Int>(1, 2, 3, 4, 5, 6, 7, 8, 9)
+        subscriber.onSuccess(list)
+    }
+}
