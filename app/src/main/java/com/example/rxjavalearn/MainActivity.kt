@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 //        val dispose: Disposable = observable
 //            .buffer(4)
 //
-//            .subscribe({ println("next1111111111111111") }, {}, {})
+//            .subscribe({ println("next1111111111111111") }, {}, { })
 
 //            _____________
         //Completable
@@ -42,15 +42,27 @@ class MainActivity : AppCompatActivity() {
 //            }, {
 //
 //            })
-        val disposeTwo = dataSourceSingle()
+        val disposeTwo = dataSourceSingle() //example Single
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-Log.d("SINGLE","$it")
-            },{
+                Log.d("SINGLE", "$it")
+            }, {
+
+            })
+
+        val disposeMaybe = dataSourceMaybe()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Log.d("MAYBE", "$it")
+            }, {
+
+            }, {
 
             })
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -84,5 +96,12 @@ fun dataSourceSingle(): Single<List<Int>> {
     return Single.create { subscriber ->
         val list = listOf<Int>(1, 2, 3, 4, 5, 6, 7, 8, 9)
         subscriber.onSuccess(list)
+    }
+}
+
+fun dataSourceMaybe(): Maybe<List<Int>> {
+    return Maybe.create { subscriber ->
+        val listMaybe = listOf<Int>(1, 2, 1, 2, 1, 2, 3)
+        subscriber.onSuccess(listMaybe)
     }
 }
