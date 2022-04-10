@@ -12,6 +12,7 @@ import io.reactivex.disposables.Disposable
 
 import io.reactivex.schedulers.Schedulers
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,25 +43,36 @@ class MainActivity : AppCompatActivity() {
 //            }, {
 //
 //            })
-        val disposeTwo = dataSourceSingle() //example Single
+//        val disposeTwo = dataSourceSingle() //example Single
+//            .subscribeOn(Schedulers.newThread())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({
+//                Log.d("SINGLE", "$it")
+//            }, {
+//
+//            })
+
+//        val disposeMaybe = dataSourceMaybe()
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({
+//                Log.d("MAYBE", "$it")
+//            }, {
+//
+//            }, {
+//
+//            })
+        val result:Disposable = Observable.just(1, 2, 3, 4)
+            .delay(5, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d("SINGLE", "$it")
+                       Toast.makeText(applicationContext,"value is - $ $it",Toast.LENGTH_LONG).show()
+//                Log.d("OBSERVABLE", "$it")
             }, {
 
             })
 
-        val disposeMaybe = dataSourceMaybe()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Log.d("MAYBE", "$it")
-            }, {
-
-            }, {
-
-            })
     }
 
 
