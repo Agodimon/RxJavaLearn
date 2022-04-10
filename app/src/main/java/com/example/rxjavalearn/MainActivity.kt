@@ -3,11 +3,13 @@ package com.example.rxjavalearn
 import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import io.reactivex.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 import io.reactivex.schedulers.Schedulers
@@ -15,6 +17,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
+    private val disposeBag = CompositeDisposable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -62,16 +66,25 @@ class MainActivity : AppCompatActivity() {
 //            }, {
 //
 //            })
-        val result:Disposable = Observable.just(1, 2, 3, 4)
+        val result: Disposable = Observable.just(1, 2, 3, 4)
             .delay(5, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                       Toast.makeText(applicationContext,"value is - $ $it",Toast.LENGTH_LONG).show()
+                Log.e("DISPOSE", "value is - $ $it")
 //                Log.d("OBSERVABLE", "$it")
             }, {
 
             })
+        Handler().postDelayed(
+            {
+
+                Log.e("DISPOSE", "disposed")
+                result.dispose()
+            },
+            6000
+        )
+
 
     }
 
