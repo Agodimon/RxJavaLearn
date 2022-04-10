@@ -76,14 +76,7 @@ class MainActivity : AppCompatActivity() {
             }, {
 
             })
-        Handler().postDelayed(
-            {
-
-                Log.e("DISPOSE", "disposed")
-                result.dispose()
-            },
-            6000
-        )
+        disposeBag.add(result)
 
 
     }
@@ -91,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-
+        disposeBag.clear()
     }
 }
 
